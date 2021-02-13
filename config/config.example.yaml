@@ -1,0 +1,4 @@
+exchange:
+- name: binance
+  apiKey: apiKey
+  sercetKey: sercetKey
