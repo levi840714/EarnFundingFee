@@ -1,4 +1,4 @@
 exchange:
-- name: binance
+  name: binance
   apiKey: apiKey
-  sercetKey: sercetKey
+  secretKey: sercetKey
