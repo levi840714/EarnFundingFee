@@ -47,16 +47,12 @@ func GetTop10FundingRate() (top10 []FundingRate) {
 	return
 }
 
-func GetBalance() (usdtBalance decimal.Decimal){
+func GetBalance() (usdtBalance decimal.Decimal) {
 	uri := BaseUrl + "/fapi/v2/balance"
 	params := map[string]interface{}{
 		"timestamp": milliTimestamp(),
 	}
-	payload := requestParams(params)
-	payload = signature(payload)
-	r, _ := http.NewRequest(http.MethodGet, uri+"?"+payload, nil)
-	r.Header.Set("X-MBX-APIKEY", viper.GetString("exchange.apiKey"))
-
+	r, _ := getRequest(http.MethodGet, uri, params)
 	resp, _ := getResponseJson(r)
 	var getBalance GetBalanceResp
 	_ = json.Unmarshal(resp, &getBalance)
@@ -70,8 +66,16 @@ func GetBalance() (usdtBalance decimal.Decimal){
 	return
 }
 
-func ChangeLeverage() {
-
+func ChangeLeverage(symbol string) {
+	uri := BaseUrl + "/fapi/v1/leverage"
+	params := map[string]interface{}{
+		"symbol":    symbol,
+		"leverage":  viper.GetInt("exchange.leverage"),
+		"timestamp": milliTimestamp(),
+	}
+	r, _ := getRequest(http.MethodPost, uri, params)
+	resp, _ := getResponseJson(r)
+	fmt.Println(string(resp))
 }
 
 func CalculateFundingFee() {

@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strings"
 	"time"
 )
 
@@ -49,4 +50,19 @@ func signature(payload string) string {
 	payload = payload + "&signature=" + sign
 
 	return payload
+}
+
+func getRequest(method string, uri string, params map[string]interface{}) (r *http.Request, err error) {
+	payload := requestParams(params)
+	payload = signature(payload)
+	switch method {
+	case http.MethodGet:
+		r, err = http.NewRequest(http.MethodGet, uri+"?"+payload, nil)
+	case http.MethodPost:
+		r, err = http.NewRequest(http.MethodPost, uri, strings.NewReader(payload))
+		r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	}
+	r.Header.Set("X-MBX-APIKEY", viper.GetString("exchange.apiKey"))
+
+	return
 }

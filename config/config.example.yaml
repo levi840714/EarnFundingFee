@@ -2,3 +2,4 @@ exchange:
   name: binance
   apiKey: apiKey
   secretKey: sercetKey
+  leverage: 20
